@@ -71,7 +71,7 @@ MIT
 - Icons from Font Awesome
 - Styling framework from Tailwind CSS
 
-##Group
+## Group
 
 <div align="center">
   <img src="https://github.com/stickland1101/my_image/blob/main/WeChat_group.png">
