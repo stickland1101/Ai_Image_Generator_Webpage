@@ -1,6 +1,6 @@
 {
     "api": {
-        "key": "sk-dpnfshwocohzguprveptececcpahmpaahqlcwfiibhcvkrmw",
+        "key": "you-api-key",
         "url": "https://api.siliconflow.cn/v1/images/generations"
     },
     "defaults": {
