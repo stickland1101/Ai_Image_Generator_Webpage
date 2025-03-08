@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator - Create</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <!-- Fallback configuration -->
+    <script>
+        // This is a fallback configuration in case config.json cannot be loaded
+        window.FALLBACK_CONFIG = {
+            "api": {
+                "key": "sk-dpnfshwocohzguprveptececcpahmpaahqlcwfiibhcvkrmw",
+                "url": "https://api.siliconflow.cn/v1/images/generations"
+            },
+            "defaults": {
+                "model": "Kwai-Kolors/Kolors",
+                "size": "1024x1024",
+                "steps": 20,
+                "guidanceScale": 7.5
+            }
+        };
+    </script>
+</head>
+<body class="h-screen bg-gray-900 text-white overflow-hidden">
+    <!-- Loading animation (centered in window) -->
+    <div id="loading-animation" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-80 hidden">
+        <div class="text-center">
+            <div class="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-purple-500 mx-auto"></div>
+            <p class="mt-4 text-center text-purple-400 text-xl">Generating your masterpiece...</p>
+        </div>
+    </div>
+
+    <div class="flex flex-col md:flex-row h-screen">
+        <!-- Left Column: Real-time Preview (WebGL rendering) -->
+        <div class="w-full md:w-1/3 h-1/3 md:h-full border-b md:border-b-0 md:border-r border-gray-700 flex flex-col">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Preview</h2>
+                <div class="flex space-x-2">
+                    <button id="fullscreen-btn" class="p-2 rounded-full hover:bg-gray-700 transition" title="Fullscreen">
+                        <i class="fas fa-expand"></i>
+                    </button>
+                    <button id="download-preview-btn" class="p-2 rounded-full hover:bg-gray-700 transition" title="Download">
+                        <i class="fas fa-download"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-grow flex items-center justify-center p-4 relative" style="min-height: 250px;">
+                <div id="preview-container" class="w-full h-full flex items-center justify-center overflow-hidden">
+                    <!-- Preview image will be inserted here -->
+                    <img id="preview-image" class="max-w-full max-h-full rounded-lg shadow-lg hidden object-contain" src="" alt="Generated image">
+                    
+                    <!-- WebGL canvas for rendering -->
+                    <canvas id="webgl-canvas" class="w-full h-full hidden"></canvas>
+                </div>
+                
+                <!-- Right-click download instruction (shown when download fails) -->
+                <div id="download-instruction" class="absolute bottom-2 left-2 right-2 bg-gray-800 bg-opacity-80 p-2 rounded text-sm text-center hidden">
+                    <p>If download button doesn't work, right-click on the image and select "Save image as..."</p>
+                </div>
+            </div>
+            <div class="p-4 border-t border-gray-700 bg-gray-800">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <span class="text-sm text-gray-400">Resolution:</span>
+                        <select id="resolution-select" class="ml-2 bg-gray-700 rounded px-2 py-1 text-sm">
+                            <option>512x512</option>
+                            <option selected>1024x1024</option>
+                            <option>1536x1536</option>
+                        </select>
+                    </div>
+                    <div>
+                        <span class="text-sm text-gray-400">Quality:</span>
+                        <select id="quality-select" class="ml-2 bg-gray-700 rounded px-2 py-1 text-sm">
+                            <option>Draft</option>
+                            <option selected>Standard</option>
+                            <option>HD</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Middle Column: Prompt Input Panel -->
+        <div class="w-full md:w-1/3 h-1/3 md:h-full border-b md:border-b-0 md:border-r border-gray-700 flex flex-col">
+            <div class="p-4 border-b border-gray-700">
+                <h2 class="text-xl font-bold">Prompt Editor</h2>
+            </div>
+            <div class="flex-grow overflow-y-auto p-4">
+                <form id="promptEditorForm">
+                    <div class="mb-4">
+                        <label class="block text-gray-400 mb-2">Prompt</label>
+                        <textarea 
+                            id="promptTextarea" 
+                            class="w-full h-40 bg-gray-800 border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Describe your image in detail..."
+                        ></textarea>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label class="block text-gray-400 mb-2">Negative Prompt</label>
+                        <textarea 
+                            id="negativePromptTextarea" 
+                            class="w-full h-20 bg-gray-800 border border-gray-700 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                            placeholder="Elements you want to avoid..."
+                        ></textarea>
+                    </div>
+                    
+                    <div class="mb-6">
+                        <h3 class="text-gray-400 mb-3">Prompt Optimization Suggestions</h3>
+                        <div class="space-y-2">
+                            <div class="bg-gray-800 p-3 rounded-lg border border-gray-700 hover:border-purple-500 cursor-pointer transition">
+                                <p class="text-sm">Add more detailed lighting description</p>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-lg border border-gray-700 hover:border-purple-500 cursor-pointer transition">
+                                <p class="text-sm">Specify art style (e.g., watercolor, oil painting)</p>
+                            </div>
+                            <div class="bg-gray-800 p-3 rounded-lg border border-gray-700 hover:border-purple-500 cursor-pointer transition">
+                                <p class="text-sm">Add camera perspective details</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button 
+                            type="submit" 
+                            class="flex-grow bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-4 rounded-lg transition duration-300 flex items-center justify-center"
+                        >
+                            <i class="fas fa-magic mr-2"></i> Generate
+                        </button>
+                        <button 
+                            type="button" 
+                            id="random-prompt-btn"
+                            class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition duration-300"
+                        >
+                            <i class="fas fa-random"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Right Column: History Gallery -->
+        <div class="w-full md:w-1/3 h-1/3 md:h-full flex flex-col">
+            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
+                <h2 class="text-xl font-bold">History</h2>
+                <div class="flex space-x-2">
+                    <button class="p-2 rounded-full hover:bg-gray-700 transition" title="Filter">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <button class="p-2 rounded-full hover:bg-gray-700 transition" title="Sort">
+                        <i class="fas fa-sort"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="flex-grow overflow-y-auto p-4">
+                <div id="history-grid" class="grid grid-cols-2 gap-4">
+                    <!-- History items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fullscreen modal for viewing images -->
+    <div id="fullscreen-modal" class="fixed inset-0 z-50 bg-black bg-opacity-90 hidden flex items-center justify-center">
+        <button id="close-fullscreen" class="absolute top-4 right-4 text-white text-2xl"><i class="fas fa-times"></i></button>
+        <img id="fullscreen-image" class="max-h-screen max-w-screen-lg object-contain" src="" alt="Fullscreen preview">
+        <button id="fullscreen-download-btn" class="absolute bottom-4 right-4 bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded-full transition">
+            <i class="fas fa-download mr-2"></i> Download
+        </button>
+    </div>
+
+    <!-- Counter section -->
+    <div class="fixed bottom-2 left-0 right-0 text-center text-white text-opacity-70 text-xs z-50">
+        <p class="counter-stats">
+            <span id="visitCounter">Total Visits: 0</span> | <span id="imageCounter">Total Images Generated: 0</span>
+        </p>
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+</html> 

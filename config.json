@@ -1,0 +1,12 @@
+{
+    "api": {
+        "key": "sk-dpnfshwocohzguprveptececcpahmpaahqlcwfiibhcvkrmw",
+        "url": "https://api.siliconflow.cn/v1/images/generations"
+    },
+    "defaults": {
+        "model": "Kwai-Kolors/Kolors",
+        "size": "1024x1024",
+        "steps": 20,
+        "guidanceScale": 7.5
+    }
+} 

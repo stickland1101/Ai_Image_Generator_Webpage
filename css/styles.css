@@ -1,0 +1,330 @@
+/* Custom Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes fadeInDelay {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes fadeInLongDelay {
+    0% { opacity: 0; }
+    70% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { 
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+    animation: fadeIn 1s ease-out forwards;
+}
+
+.animate-fade-in-delay {
+    animation: fadeInDelay 2s ease-out forwards;
+}
+
+.animate-fade-in-delay-long {
+    animation: fadeInLongDelay 3s ease-out forwards;
+}
+
+.animate-slide-up {
+    animation: slideUp 1s ease-out forwards;
+}
+
+.animate-pulse {
+    animation: pulse 2s infinite;
+}
+
+/* Custom Styles */
+.bg-gradient-animated {
+    background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+    background-size: 400% 400%;
+    animation: gradientFlow 15s ease infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(31, 41, 55, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.8);
+}
+
+/* Input Range Styling */
+input[type=range] {
+    -webkit-appearance: none;
+    height: 6px;
+    background: #4B5563;
+    border-radius: 3px;
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #8B5CF6;
+    cursor: pointer;
+}
+
+input[type=range]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #8B5CF6;
+    cursor: pointer;
+    border: none;
+}
+
+/* Focus States */
+button:focus, input:focus, textarea:focus, select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.5);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .flex.h-screen {
+        flex-direction: column;
+    }
+    
+    .w-1/3 {
+        width: 100%;
+        height: auto;
+    }
+    
+    .h-full {
+        height: auto;
+    }
+
+    /* Adjust column heights for mobile */
+    .h-1/3 {
+        height: 33.333vh;
+    }
+
+    /* Make sure the preview is visible on mobile */
+    #preview-container {
+        min-height: 200px;
+    }
+
+    /* Adjust font sizes for mobile */
+    h1 {
+        font-size: 1.75rem;
+    }
+
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    /* Ensure buttons are large enough to tap on mobile */
+    button {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* WebGL Canvas */
+#webgl-canvas {
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Image Hover Effects */
+.history-item img {
+    transition: transform 0.3s ease;
+}
+
+.history-item:hover img {
+    transform: scale(1.03);
+}
+
+/* Fullscreen Modal */
+#fullscreen-modal {
+    transition: opacity 0.3s ease;
+}
+
+#fullscreen-modal.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#fullscreen-modal:not(.hidden) {
+    opacity: 1;
+}
+
+#close-fullscreen {
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+}
+
+#close-fullscreen:hover {
+    opacity: 1;
+}
+
+/* Loading Animation */
+#loading-animation {
+    transition: opacity 0.3s ease;
+}
+
+#loading-animation.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#loading-animation:not(.hidden) {
+    opacity: 1;
+}
+
+/* Download Instruction */
+#download-instruction {
+    transition: opacity 0.3s ease;
+    animation: fadeIn 0.3s ease-out forwards;
+    z-index: 10;
+}
+
+#download-instruction.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+#download-instruction:not(.hidden) {
+    opacity: 1;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 640px) {
+    /* Make history grid single column on small screens */
+    #history-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    /* Adjust padding for smaller screens */
+    .p-4 {
+        padding: 0.75rem;
+    }
+    
+    /* Make sure the preview image fits on small screens */
+    #preview-image, #fullscreen-image {
+        max-width: 90vw;
+        max-height: 70vh;
+        object-fit: contain;
+    }
+    
+    /* Adjust download instruction for mobile */
+    #download-instruction {
+        font-size: 0.75rem;
+        padding: 0.5rem;
+    }
+}
+
+/* 改进图片显示逻辑 */
+/* 确保图片在所有屏幕尺寸下都能正确显示 */
+#preview-container {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#preview-image {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    transition: all 0.3s ease;
+}
+
+/* 在小屏幕上进一步限制图片尺寸 */
+@media (max-width: 480px) {
+    #preview-image {
+        max-width: 95%;
+        max-height: 95%;
+    }
+    
+    /* 确保预览容器有合适的高度 */
+    #preview-section .flex-grow {
+        min-height: 250px;
+        height: 40vh;
+    }
+}
+
+/* 确保全屏模式下的图片也能正确显示 */
+#fullscreen-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#fullscreen-image {
+    object-fit: contain;
+    max-width: 95vw;
+    max-height: 85vh;
+}
+
+/* 确保在移动设备上的标签式布局中图片不会溢出 */
+.section-content {
+    overflow: hidden;
+}
+
+/* 确保图片容器在移动设备上有足够的空间 */
+@media (max-width: 768px) {
+    #preview-container {
+        width: 100%;
+        height: 100%;
+        max-height: 40vh;
+    }
+}
+
+/* Counter styles */
+.counter-stats {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+    color: white;
+}
+
+.counter-stats:hover {
+    opacity: 1;
+}
+
+.counter-stats span {
+    color: white;
+} 
