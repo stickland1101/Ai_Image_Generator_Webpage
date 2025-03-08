@@ -2,6 +2,13 @@
 
 A pure frontend web application for generating AI images using natural language descriptions.
 
+<div align="center">
+  <img src="https://github.com/stickland1101/my_image/blob/main/ai_image.png">
+</div>
+<div align="center">
+  <img src="https://github.com/stickland1101/my_image/blob/main/ai_image1.png">
+</div>
+
 ## Features
 
 - **Minimalist Entry Page**: Full-screen gradient background with a central input box for natural language descriptions
@@ -62,4 +69,10 @@ MIT
 
 - Images from Unsplash
 - Icons from Font Awesome
-- Styling framework from Tailwind CSS 
+- Styling framework from Tailwind CSS
+
+##Group
+
+<div align="center">
+  <img src="https://github.com/stickland1101/my_image/blob/main/WeChat_group.png">
+</div>
