@@ -122,7 +122,7 @@ async function loadConfig() {
                 // Hardcoded fallback if window.FALLBACK_CONFIG is not available
                 config = {
                     "api": {
-                        "key": "sk-dpnfshwocohzguprveptececcpahmpaahqlcwfiibhcvkrmw",
+                        "key": "you-api-key",
                         "url": "https://api.siliconflow.cn/v1/images/generations"
                     },
                     "defaults": {
